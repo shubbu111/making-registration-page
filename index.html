@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Async JS</title>
+</head>
+<body>
+    <!-- <script src="callback.js"></script> -->
+    <!-- <script src="promises.js"></script> -->
+    <!-- <script src="async_await.js"></script> -->
+    <script>
+        const preMovie = async() => {
+            const promiseWifeBringingTicks = new Promise((resolve, reject) => {
+                setTimeout(() => resolve('tickets'), 3000);
+            })
+
+            let getPopcorn = new Promise((resolve, reject)=> resolve('popcorn'));
+
+            let getCandy = new Promise((resolve, reject) => resolve('candy'));
+
+            let getCoke = new Promise((resolve, reject) => resolve('coke'))
+            
+            let ticket 
+            try{
+                ticket = await promiseWifeBringingTicks;
+            } catch(e){
+                ticket = 'sad face';
+            }
+
+            let [popcorn, candy, coke] = await Promise.all([getPopcorn, getCandy, getCoke]);
+
+            console.log(`${popcorn}, ${candy}, ${coke}`);
+
+            return ticket;
+    }
+
+    preMovie().then((m) => console.log(`person3 : shows ${m}`));
+    </script>
+</body>
+</html>
