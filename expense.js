@@ -40,10 +40,20 @@ window.addEventListener("DOMContentLoaded", () => {
       .get("https://crudcrud.com/api/04d975795ace4032b07f4e3579f1b8e9/appointmentData")
       .then((response) => {
         for (let i = 0; i < response.data.length; i++) {
-          showNewUseronScreen(response.data[i]);
+            showNewUserOnScreen(response.data[i]);
         }
       })
       .catch((err) => console.log(err));
+
+      // const localStorageObj = localstorage;
+      // const localstoragekeys = Object.keys(localStorageObj);
+
+      // for (var i=0; i< localstoragekeys.length; i++){
+        //  const key = localstoragekeys[i];
+        // const userDetailsString = localStorageObj[key];
+        // const userDetailsObj = JSON.parse(userDetailsString);
+        // showNewUserOnScreen(userDetailsObj);
+      //}
   });
 
 function showNewUserOnScreen (userDetails) {
