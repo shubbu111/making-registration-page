@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div class="container">
+            <h2>Expense Tracker</h2>
+            <form id="addForm" class="form-inline mb-3">
+                <div class="form-floating">
+                    <input type="number"id="number" class="form-control" placeholder="Please put your spending here" required>
+                    <label for="number">Add Expense Amount : </label>
+                </div><br>
+                <div class="form-floating">
+                    <input type="text" id="description" class="form-control" placeholder="Please put your description here" required>
+                    <label for="description">Description : </label>
+                </div><br>
+                <label for="choose">Choose Category : </label>
+                <select class="form-select-sm" id="category">
+                    <option> House bills </option>
+                    <option> Food </option>
+                    <option> Fuel </option>
+                    <option> Electricity</option>
+                </select><br><br>
+                <input type="submit" class="btn btn-danger" value="Add Expense" onclick="saveToLocalStorage(event)">   
+            </form>
+        <ul id="ul" class="list-group">
+        </ul>
+        <script src=" https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.0/axios.min.js"></script>
+        
+        <script> 
+        function saveToLocalStorage(event){
+    event.preventDefault();
+
+    let userDetails = {
+        Add_Expense_Amount : document.getElementById('number').value,
+        Description : document.getElementById('description').value,
+        Choose_Category : document.getElementById('category').value
+    }
+
+    showNewUserOnScreen(userDetails) 
+
+ 
+    axios.post("https://crudcrud.com/api/04d975795ace4032b07f4e3579f1b8e9/appointmentData", userDetails)
+    .then((response) => {
+        console.log(response);
+    })
+    .catch((err)=> {
+        console.log(err);
+    })
+
+
+    // let userDetails_serialized=JSON.stringify(userDetails);
+
+    // localStorage.setItem(userDetails.Add_Expense_Amount , userDetails_serialized);
+
+    // to clear the form
+    document.getElementById('number').value = "";
+    document.getElementById('description').value = "";
+    
+
+}
+
+function showNewUserOnScreen (userDetails) {
+    const d = document.getElementById('ul')
+    const li = `<li id='${userDetails.Add_Expense_Amount}'>'${userDetails.Add_Expense_Amount}','${userDetails.Description}','${userDetails.Choose_Category}'
+    <button onclick = "editUser('${ userDetails.Add_Expense_Amount}','${userDetails.Description}','${userDetails.Choose_Category}')"> Edit </button> 
+   <button onclick = "deleteUser('${userDetails.Add_Expense_Amount}')"> Delete </button>
+
+    </li>`
+    d.innerHTML = d.innerHTML + li;
+
+}
+
+function deleteUser(number) {
+    let child = document.getElementById(number);
+    let parent = document.getElementById('ul');
+    parent.removeChild(child);
+    localStorage.removeItem(number)
+}
+
+function editUser(number, description, category){
+    document.getElementById('number').value = number;
+    document.getElementById('description').value = description;
+    document.getElementById('category').value = category;
+    
+    deleteUser(number);
+}
+
+</script>
+    </div>
+    
+    
+    <script src="expense.js"></script>
+</body>
+</html>
