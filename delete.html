@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forms</title>
+
+</head>
+
+
+<body>
+
+    <form onsubmit="savetocrudstorage(event)">
+        <h2 style="text-align:center;color:tomato">Book a Call</h2>
+        <h5 style="text-align:center">Book a call slot and out representative will call you within 1hr of selected time</h5>
+        <hr width="100%" size="4px">
+        <div class="wrapper">
+            <div class="input">
+                <label  for:"fullname" style="text-align:left">Name:</label><br>
+                <input id="name" type="text"    required><br><br>
+                <label for:"email">Email:</label><br>
+                <input type="email"  id="emailID"  required><br><br>
+                <label for="quantity">Phone:</label><br>
+                <input id="phone" required><br><br>
+                <label for="call-time">Time for Call:</label><br>
+            </div>
+              <div class="date">
+                  <input id="date" type="date" required> <input id="time" type="time" required>  <br><br>
+                  <button>Submit</button>
+              </div>
+            </form>
+
+            <ul id="ul">
+
+            </ul>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
+            <script> 
+            function savetocrudstorage(event) {
+                event.preventDefault();
+                let userDetails = {
+                    Name : document.getElementById('name').value,
+                    Email : document.getElementById('emailID').value,
+                    Number :document.getElementById('phone').value,
+                    Date : document.getElementById('date').value,
+                    Time : document.getElementById('time').value
+                }
+
+                let userDetails_serialized=JSON.stringify(userDetails)
+
+            axios.post("https://crudcrud.com/api/04d975795ace4032b07f4e3579f1b8e9/appointmentData",userDetails)
+            .then((userDetails)=>{
+                // console.log(userDetails.data)
+                // removeUserfromScreen(userDetails)
+                // localStorage.setItem(userDetails.Email , userDetails_serialized)
+                showNewUseronScreen(userDetails.data)
+            })
+            .catch((err)=>console.log)
+
+
+
+          }
+
+
+
+            function showNewUseronScreen(user){
+             const d=document.getElementById('ul')
+             const li= `<li id="${user._id}"> ${user.Name} - ${user.Email} - ${user.Number} - ${user.Date} - ${user.Time} 
+              <button onclick = editUser('${user._id}')> Edit </button> 
+              <button onclick = deleteUser('${user._id}')> Delete </button> 
+               </li>`
+
+           d.innerHTML = d.innerHTML + li 
+
+          }
+
+          function removeUserfromScreen(userId) {
+            let parent = document.getElementById('ul')
+
+            let child=document.getElementById(userId)
+
+
+            if(child) {
+              parent.removeChild(child)
+            }
+           }
+
+
+          function deleteUser(userId) {
+            // console.log(emailID)
+            //  from local storage
+            axios.delete(`https://crudcrud.com/api/04d975795ace4032b07f4e3579f1b8e9/appointmentData/${userId}`)
+            .then((response)=>{
+                removeUserfromScreen(userId)
+                })
+            .catch((err)=>console.log(err))
+
+           }
+
+             function editUser(userId) {
+              let newparent = document.getElementById('ul')
+              let childToBeDeleted = document.getElementById(userId)
+              newparent.removeChild(childToBeDeleted);
+             }
+             window.addEventListener("DOMContentLoaded",() => {
+              axios.get("https://crudcrud.com/api/04d975795ace4032b07f4e3579f1b8e9/appointmentData")
+              .then((userDetails)=>{
+              for(let i=0;i<userDetails.data.length;i++){
+                    showNewUseronScreen(userDetails.data[i])
+                }
+              })
+             })
+
+
+
+
+            </script>
+
+        </div>
+</body>
+</html>
